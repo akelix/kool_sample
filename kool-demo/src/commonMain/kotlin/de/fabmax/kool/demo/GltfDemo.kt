@@ -32,30 +32,30 @@ class GltfDemo : DemoScene("glTF Models") {
             "Sample1", "./models/Car5.glb",
             1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
         ),
-        GltfModel(
-            "Sample2", "./models/Car4.glb",
-            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
-        ),
-        GltfModel(
-            "Sample3", "./models/Car3.glb",
-            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
-        ),
-        GltfModel(
-            "Sample4", "./models/PartCar2.glb",
-            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
-        ),
-        GltfModel(
-            "Sample5", "./models/PartCar.glb",
-            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
-        ),
-        GltfModel(
-            "Sample6", "./models/Opel.glb",
-            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
-        ),
-        GltfModel(
-            "Flight Helmet", "${DemoLoader.modelPath}/flight_helmet/FlightHelmet.gltf",
-            4f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), false, 3.5
-        ),
+//        GltfModel(
+//            "Sample2", "./models/Car4.glb",
+//            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
+//        ),
+//        GltfModel(
+//            "Sample3", "./models/Car3.glb",
+//            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
+//        ),
+//        GltfModel(
+//            "Sample4", "./models/PartCar2.glb",
+//            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
+//        ),
+//        GltfModel(
+//            "Sample5", "./models/PartCar.glb",
+//            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
+//        ),
+//        GltfModel(
+//            "Sample6", "./models/Opel.glb",
+//            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
+//        ),
+//        GltfModel(
+//            "Flight Helmet", "${DemoLoader.modelPath}/flight_helmet/FlightHelmet.gltf",
+//            4f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), false, 3.5
+//        ),
 //        GltfModel(
 //            "Polly", "${DemoLoader.modelPath}/project_polly_jpg.glb",
 //            3f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), false, 3.5, normalizeBoneWeights = true

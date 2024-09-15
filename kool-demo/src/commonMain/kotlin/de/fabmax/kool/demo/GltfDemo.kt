@@ -29,6 +29,10 @@ class GltfDemo : DemoScene("glTF Models") {
     private val foxAnimator = FoxAnimator()
     private val models = listOf(
         GltfModel(
+            "Sample", "./models/sample.glb",
+            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
+        ),
+        GltfModel(
             "Flight Helmet", "${DemoLoader.modelPath}/flight_helmet/FlightHelmet.gltf",
             4f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), false, 3.5
         ),

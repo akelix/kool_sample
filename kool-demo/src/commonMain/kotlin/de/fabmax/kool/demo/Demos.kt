@@ -94,7 +94,7 @@ object Demos {
     val categories = mutableListOf(physicsDemos, graphicsDemos, techDemos, hiddenDemos)
     val demos = categories.flatMap { it.entries }.associateBy { it.id }.toMutableMap()
 
-    val defaultDemo = "ao"
+    val defaultDemo = "gltf"
 
     class Category(val title: String, val isHidden: Boolean, val fromColor: Float, val toColor: Float) {
         val entries = mutableListOf<Entry>()

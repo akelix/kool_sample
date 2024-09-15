@@ -56,34 +56,34 @@ class GltfDemo : DemoScene("glTF Models") {
             "Flight Helmet", "${DemoLoader.modelPath}/flight_helmet/FlightHelmet.gltf",
             4f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), false, 3.5
         ),
-        GltfModel(
-            "Polly", "${DemoLoader.modelPath}/project_polly_jpg.glb",
-            3f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), false, 3.5, normalizeBoneWeights = true
-        ),
-        GltfModel(
-            "Coffee Cart", "${DemoLoader.modelPath}/CoffeeCart_01.glb",
-            2f, Vec3f(0f, -0.01f, 0f), false, Vec3d(0.0, 1.75, 0.0), false, 3.5
-        ),
-        GltfModel(
-            "Camera", "${DemoLoader.modelPath}/camera.glb",
-            20f, Vec3f.ZERO, true, Vec3d(0.0, 0.5, 0.0), false, 5.0
-        ),
-        GltfModel(
-            "Fox", "${DemoLoader.modelPath}/fox.glb",
-            0.01f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), true, 3.5
-        ).apply { animate = { _ -> foxAnimator.animate(this) } },
-        GltfModel(
-            "Animated Box", "${DemoLoader.modelPath}/BoxAnimated.gltf",
-            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
-        ),
-        GltfModel(
-            "Morph Cube", "${DemoLoader.modelPath}/AnimatedMorphCube.glb",
-            1f, Vec3f(0f, 1f, 0f), false, Vec3d(0.0, 1.0, 0.0), false, 3.5
-        ),
-        GltfModel(
-            "Alpha Mode Test", "${DemoLoader.modelPath}/AlphaBlendModeTest.glb",
-            0.5f, Vec3f(0f, 0.06f, 0f), false, Vec3d(0.0, 0.75, 0.0), false, 3.5
-        )
+//        GltfModel(
+//            "Polly", "${DemoLoader.modelPath}/project_polly_jpg.glb",
+//            3f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), false, 3.5, normalizeBoneWeights = true
+//        ),
+//        GltfModel(
+//            "Coffee Cart", "${DemoLoader.modelPath}/CoffeeCart_01.glb",
+//            2f, Vec3f(0f, -0.01f, 0f), false, Vec3d(0.0, 1.75, 0.0), false, 3.5
+//        ),
+//        GltfModel(
+//            "Camera", "${DemoLoader.modelPath}/camera.glb",
+//            20f, Vec3f.ZERO, true, Vec3d(0.0, 0.5, 0.0), false, 5.0
+//        ),
+//        GltfModel(
+//            "Fox", "${DemoLoader.modelPath}/fox.glb",
+//            0.01f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), true, 3.5
+//        ).apply { animate = { _ -> foxAnimator.animate(this) } },
+//        GltfModel(
+//            "Animated Box", "${DemoLoader.modelPath}/BoxAnimated.gltf",
+//            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
+//        ),
+//        GltfModel(
+//            "Morph Cube", "${DemoLoader.modelPath}/AnimatedMorphCube.glb",
+//            1f, Vec3f(0f, 1f, 0f), false, Vec3d(0.0, 1.0, 0.0), false, 3.5
+//        ),
+//        GltfModel(
+//            "Alpha Mode Test", "${DemoLoader.modelPath}/AlphaBlendModeTest.glb",
+//            0.5f, Vec3f(0f, 0.06f, 0f), false, Vec3d(0.0, 0.75, 0.0), false, 3.5
+//        )
     )
 
     private val selectedModelIdx = mutableStateOf(0)

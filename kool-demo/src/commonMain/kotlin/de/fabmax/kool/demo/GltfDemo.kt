@@ -3,21 +3,47 @@ package de.fabmax.kool.demo
 import de.fabmax.kool.Assets
 import de.fabmax.kool.KoolContext
 import de.fabmax.kool.demo.menu.DemoMenu
-import de.fabmax.kool.math.*
+import de.fabmax.kool.math.MutableVec2f
+import de.fabmax.kool.math.MutableVec3d
+import de.fabmax.kool.math.MutableVec3f
+import de.fabmax.kool.math.Vec3d
+import de.fabmax.kool.math.Vec3f
+import de.fabmax.kool.math.deg
+import de.fabmax.kool.math.rad
+import de.fabmax.kool.math.toDeg
 import de.fabmax.kool.modules.gltf.GltfLoadConfig
 import de.fabmax.kool.modules.gltf.GltfMaterialConfig
 import de.fabmax.kool.modules.gltf.loadGltfModel
 import de.fabmax.kool.modules.ksl.KslPbrShader
-import de.fabmax.kool.modules.ui2.*
+import de.fabmax.kool.modules.ui2.ComboBox
+import de.fabmax.kool.modules.ui2.Grow
+import de.fabmax.kool.modules.ui2.MutableStateValue
+import de.fabmax.kool.modules.ui2.Text
+import de.fabmax.kool.modules.ui2.items
+import de.fabmax.kool.modules.ui2.margin
+import de.fabmax.kool.modules.ui2.mutableStateOf
+import de.fabmax.kool.modules.ui2.onItemSelected
+import de.fabmax.kool.modules.ui2.selectedIndex
+import de.fabmax.kool.modules.ui2.width
 import de.fabmax.kool.pipeline.ao.AoPipeline
 import de.fabmax.kool.pipeline.deferred.DeferredOutputShader
 import de.fabmax.kool.pipeline.deferred.DeferredPipeline
 import de.fabmax.kool.pipeline.deferred.DeferredPipelineConfig
 import de.fabmax.kool.pipeline.deferred.deferredKslPbrShader
-import de.fabmax.kool.scene.*
+import de.fabmax.kool.scene.Model
+import de.fabmax.kool.scene.Node
+import de.fabmax.kool.scene.OrbitInputTransform
+import de.fabmax.kool.scene.Scene
+import de.fabmax.kool.scene.Skybox
+import de.fabmax.kool.scene.addTextureMesh
 import de.fabmax.kool.scene.geometry.MeshBuilder
+import de.fabmax.kool.scene.orbitCamera
 import de.fabmax.kool.toString
-import de.fabmax.kool.util.*
+import de.fabmax.kool.util.Color
+import de.fabmax.kool.util.MdColor
+import de.fabmax.kool.util.ShadowMap
+import de.fabmax.kool.util.SimpleShadowMap
+import de.fabmax.kool.util.Time
 import kotlinx.coroutines.async
 import kotlin.math.PI
 import kotlin.math.cos
@@ -29,9 +55,27 @@ class GltfDemo : DemoScene("glTF Models") {
     private val foxAnimator = FoxAnimator()
     private val models = listOf(
         GltfModel(
-            "Sample1", "./models/Car5.glb",
-            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
+            "SampleCinema", "./models/Car6Cinema.glb",
+            scale = 0.01f,
+            translation = Vec3f(0f, 0.01f, 0f),
+            generateNormals = false,
+            lookAt = Vec3d(0.0, 1.5, 0.0),
+            trackModel = true,
+            zoom = 5.0
         ),
+        GltfModel(
+            "SampleBlender", "./models/Car6.glb",
+            scale = 0.01f,
+            translation = Vec3f(-1.2f, 0.8f, 0f),
+            generateNormals = false,
+            lookAt = Vec3d(0.0, 1.5, 0.0),
+            trackModel = true,
+            zoom = 5.0
+        ),
+//        GltfModel(
+//            "SamplePrev", "./models/Car5.glb",
+//            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
+//        ),
 //        GltfModel(
 //            "Sample2", "./models/Car4.glb",
 //            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
@@ -48,10 +92,10 @@ class GltfDemo : DemoScene("glTF Models") {
 //            "Sample5", "./models/PartCar.glb",
 //            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
 //        ),
-//        GltfModel(
-//            "Sample6", "./models/Opel.glb",
-//            1f, Vec3f(0f, 0.5f, 0f), false, Vec3d(0.0, 1.5, 0.0), false, 5.0
-//        ),
+        GltfModel(
+            "Opel", "./models/Opel.glb",
+            0.15f, Vec3f(0f, 0.0f, 0f), false, Vec3d(0.0, 1.5, 0.0), true, 5.0
+        ),
 //        GltfModel(
 //            "Flight Helmet", "${DemoLoader.modelPath}/flight_helmet/FlightHelmet.gltf",
 //            4f, Vec3f.ZERO, false, Vec3d(0.0, 1.25, 0.0), false, 3.5
@@ -111,9 +155,10 @@ class GltfDemo : DemoScene("glTF Models") {
     private val animationSpeed = mutableStateOf(0.5f)
     private val isAutoRotate = mutableStateOf(true)
 
-    private val isDeferredShading: MutableStateValue<Boolean> = mutableStateOf(true).onChange { _, new ->
-        setupPipelines(new, isAo.value)
-    }
+    private val isDeferredShading: MutableStateValue<Boolean> =
+        mutableStateOf(true).onChange { _, new ->
+            setupPipelines(new, isAo.value)
+        }
     private val isAo: MutableStateValue<Boolean> = mutableStateOf(true).onChange { _, new ->
         setupPipelines(isDeferredShading.value, new)
     }
@@ -121,7 +166,8 @@ class GltfDemo : DemoScene("glTF Models") {
         deferredPipeline.isSsrEnabled = new
         setupPipelines(isDeferredShading.value, isAo.value)
     }
-    private val ssrMapSize = mutableStateOf(0.5f).onChange { _, new -> deferredPipeline.reflectionMapSize = new }
+    private val ssrMapSize =
+        mutableStateOf(0.5f).onChange { _, new -> deferredPipeline.reflectionMapSize = new }
 
     override fun lateInit(ctx: KoolContext) {
         currentModel.isVisible = true
@@ -151,8 +197,18 @@ class GltfDemo : DemoScene("glTF Models") {
             radius = 0.2f
         }
         shadowsForward += listOf(
-            SimpleShadowMap(mainScene, mainScene.lighting.lights[0], contentGroupForward, mapSize = 2048),
-            SimpleShadowMap(mainScene, mainScene.lighting.lights[1], contentGroupForward, mapSize = 2048)
+            SimpleShadowMap(
+                mainScene,
+                mainScene.lighting.lights[0],
+                contentGroupForward,
+                mapSize = 2048
+            ),
+            SimpleShadowMap(
+                mainScene,
+                mainScene.lighting.lights[1],
+                contentGroupForward,
+                mapSize = 2048
+            )
         )
 
         // load models
@@ -224,7 +280,8 @@ class GltfDemo : DemoScene("glTF Models") {
                     val model = currentModel.forwardModel
                     model?.let {
                         val center = model.globalCenter
-                        translationTarget = Vec3d(center.x.toDouble(), center.y.toDouble(), center.z.toDouble())
+                        translationTarget =
+                            Vec3d(center.x.toDouble(), center.y.toDouble(), center.z.toDouble())
                     }
                 } else if (isAutoRotate.value) {
                     verticalRotation -= Time.deltaT * 3f
@@ -360,10 +417,13 @@ class GltfDemo : DemoScene("glTF Models") {
         val uvScale = 0.3f
         val nCyl = 100
         var firstI = 0
-        for (i in 0 .. nCyl) {
+        for (i in 0..nCyl) {
             val a = (PI / nCyl * i * 2).toFloat()
             cornerPts.forEachIndexed { ci, cpt ->
-                val uv = MutableVec2f(radius + ci.toFloat() / cornerPts.size * PI.toFloat() * cornerR, 0f)
+                val uv = MutableVec2f(
+                    radius + ci.toFloat() / cornerPts.size * PI.toFloat() * cornerR,
+                    0f
+                )
                 uv.mul(uvScale)
                 uv.rotate(a.rad)
                 val pt = cpt.rotate(a.rad, Vec3f.Y_AXIS, MutableVec3f())
@@ -378,9 +438,17 @@ class GltfDemo : DemoScene("glTF Models") {
             }
         }
         val firstIBot = firstI + cornerPts.size - 1
-        for (i in 2 .. nCyl) {
-            geometry.addTriIndices(firstI, firstI + ((i - 1) * cornerPts.size), firstI + (i * cornerPts.size))
-            geometry.addTriIndices(firstIBot, firstIBot + (i * cornerPts.size), firstIBot + ((i - 1) * cornerPts.size))
+        for (i in 2..nCyl) {
+            geometry.addTriIndices(
+                firstI,
+                firstI + ((i - 1) * cornerPts.size),
+                firstI + (i * cornerPts.size)
+            )
+            geometry.addTriIndices(
+                firstIBot,
+                firstIBot + (i * cornerPts.size),
+                firstIBot + ((i - 1) * cornerPts.size)
+            )
         }
         geometry.generateNormals()
     }

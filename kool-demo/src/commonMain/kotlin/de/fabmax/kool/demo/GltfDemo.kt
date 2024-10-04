@@ -55,17 +55,17 @@ class GltfDemo : DemoScene("glTF Models") {
     private val foxAnimator = FoxAnimator()
     private val models = listOf(
         GltfModel(
-            "SampleCinema", "./models/Car6Cinema.glb",
-            scale = 0.01f,
-            translation = Vec3f(0f, 0.01f, 0f),
+            "SampleCinema", "./models/Car7Cinema.gltf",
+            scale = 1f,
+            translation = Vec3f(0f, 0.8f, 0f),
             generateNormals = false,
             lookAt = Vec3d(0.0, 1.5, 0.0),
             trackModel = true,
             zoom = 5.0
         ),
         GltfModel(
-            "SampleBlender", "./models/Car6.glb",
-            scale = 0.01f,
+            "SampleBlender", "./models/Car7.glb",
+            scale = 1f,
             translation = Vec3f(-1.2f, 0.8f, 0f),
             generateNormals = false,
             lookAt = Vec3d(0.0, 1.5, 0.0),
